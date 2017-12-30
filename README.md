@@ -12,7 +12,7 @@ git clone https://github.com/SweetmanTech/chat-app.git
 ```
 2. Change Directory to Project
 ```
-cd Projects/chat_app/ChatApp
+cd chat-app
 ```
 3. Install Dependencies
 ```

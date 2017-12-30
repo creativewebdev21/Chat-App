@@ -2,6 +2,7 @@ import React from 'react';
 
 import Home from './components/Home';
 import Chat from './components/Chat';
+import Conversations from './components/Conversations';
 
 import {
   Router,
@@ -15,6 +16,7 @@ class App extends React.Component {
         <Scene key='root'>
           <Scene key="home" component={Home} title="Home"/>
           <Scene key="chat" component={Chat} title="Chat"/>
+          <Scene key="conversations" component={Conversations} title="Conversations"/>
         </Scene>
       </Router>
     );

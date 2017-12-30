@@ -49,7 +49,7 @@ class Home extends React.Component {
         // ...
         alert ("Welcome " + email + " your uid is: " + uid);
         // Open Chat Page
-        Actions.chat({
+        Actions.conversations({
           uid: uid
         });
       } else {

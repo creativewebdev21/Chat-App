@@ -6,17 +6,21 @@ import { Actions } from 'react-native-router-flux';
 
 class Conversations extends React.Component {
   state = {
-    conversations: []
+    conversations: [],
+    placeholder: "New conversation with..."
   };
 
   render() {
     return(
       <GiftedChat
         messages={this.state.conversations}
+        placeholder={this.state.placeholder}
+        isAnimated={true}
         onSend={(messages) => {
-          //send message
+          //create new conversation
           Actions.chat({
             //pass props to chat.js
+            recipient: messages[0].text
           });
         }}
         user={{

@@ -46,15 +46,23 @@ class Home extends React.Component {
         var isAnonymous = user.isAnonymous;
         var uid = user.uid;
         var providerData = user.providerData;
-        // ...
-        alert ("Welcome " + email + " your uid is: " + uid);
+
+        // Get a reference to the database service
+        firebase.database().ref('users/' + uid + '/conversations/welcome/').set({
+          username: uid,
+          email: email,
+          message: "welcome to del-squared chat app!",
+          displayName: displayName,
+          phone: "phone number",
+          sender: "del^squared",
+        });
         // Open Chat Page
         Actions.conversations({
           uid: uid
         });
       } else {
         // User is signed out.
-        alert("user signed OUT");
+        alert("User signed out...");
       }
     });
   }

@@ -31,7 +31,8 @@ class Conversations extends React.Component {
           //create new conversation
           Actions.chat({
             //pass props to chat.js
-            recipient: messages[0].text
+            recipient: messages[0].text,
+            uid: this.state.uid,
           });
         }}
         user={{

@@ -59,7 +59,7 @@ class Home extends React.Component {
           sender: "del-squared",
           time: "textTime"
         });
-        alert ("info posted")
+        alert ("info posted");
         // Open Chat Page
         Actions.conversations({
           uid: uid

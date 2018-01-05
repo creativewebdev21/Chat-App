@@ -27,6 +27,10 @@ const firebaseConfig = {
 };
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
+// Create a reference with .ref() instead of new Firebase(url)
+const rootRef = firebase.database().ref();
+const userRef = rootRef.child('users');
+
 class Home extends React.Component {
   state = {
     name:'',
@@ -36,6 +40,10 @@ class Home extends React.Component {
 
   constructor() {
     super()
+
+  }
+
+  componentWillMount() {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         // User is signed in.
@@ -46,6 +54,7 @@ class Home extends React.Component {
         var isAnonymous = user.isAnonymous;
         var uid = user.uid;
         var providerData = user.providerData;
+        var time = new Date();
 
         // Get a reference to the database service
         firebase.database().ref('users/' + uid + '/conversations/welcome/').set({
@@ -54,8 +63,10 @@ class Home extends React.Component {
           message: "welcome to del-squared chat app!",
           displayName: displayName,
           phone: "phone number",
-          sender: "del^squared",
+          sender: "del-squared",
+          time: "textTime"
         });
+        alert ("info posted")
         // Open Chat Page
         Actions.conversations({
           uid: uid

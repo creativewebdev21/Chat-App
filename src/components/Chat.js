@@ -2,15 +2,21 @@ import React from 'react';
 
 import { GiftedChat } from 'react-native-gifted-chat';
 
+import * as firebase from 'firebase';
+
 class Chat extends React.Component {
+
   state = {
     messages: [],
-    placeholder: "Type a message to " + this.props.recipient + "..."
+    placeholder: "Type a message to " + this.props.recipient + "...",
+    recipient: this.props.recipient,
+    uid: this.props.uid,
   };
 
   constructor(props) {
    super(props);
    this.onLongPress = this.onLongPress.bind(this);
+   alert("sender: " + this.state.uid);
  }
 
   componentWillMount() {
@@ -57,7 +63,15 @@ class Chat extends React.Component {
         placeholder={this.state.placeholder}
         onLongPress={this.onLongPress}
         onSend={(messages) => {
-          //send message
+          // Get a reference to the database service
+          var newConversation = firebase.database().ref('conversations/').push();
+          var time = new Date();
+          newConversation.set({
+            sender: this.state.uid,
+            recipient: this.state.recipient,
+            messages: messages,
+            time: time.getFullYear() + " " + time.getMonth() + " " + time.getDate() + " " + time.getHours() + " " + time.getMinutes() + " " + time.getSeconds() + " " + time.getMilliseconds(),
+          });
         }}
         user={{
           _id: 1,

@@ -8,9 +8,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-
 import * as firebase from 'firebase';
-//import auth from './firebase/auth.js';
 
 import {
   Actions
@@ -27,10 +25,6 @@ const firebaseConfig = {
 };
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
-// Create a reference with .ref() instead of new Firebase(url)
-const rootRef = firebase.database().ref();
-const userRef = rootRef.child('users');
-
 class Home extends React.Component {
   state = {
     name:'',
@@ -38,9 +32,8 @@ class Home extends React.Component {
     phone:'',
   }
 
-  constructor() {
-    super()
-
+  constructor(props) {
+    super(props);
   }
 
   componentWillMount() {

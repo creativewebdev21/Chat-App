@@ -11,11 +11,12 @@ class Chat extends React.Component {
     placeholder: "Type a message to " + this.props.recipient + "...",
     recipient: this.props.recipient,
     uid: this.props.uid,
+    newConversation: this.props.newConversation,
   };
 
   constructor(props) {
    super(props);
-   this.onLongPress = this.onLongPress.bind(this);
+   this.onSend = this.onSend.bind(this);
    alert("sender: " + this.state.uid);
  }
 
@@ -25,35 +26,46 @@ class Chat extends React.Component {
     for (var i = 0; i < 3; i++) {
       messages.push({
         _id: i,
-        text: demoMessages[i],
+        text: i + ": " + demoMessages[i],
         user: {
           _id: 2,
-          name: "Test User"
+          name: "DelBot"
         }
       });
     }
     this.setState({
-      messages: messages
+      messages: messages,
+      numOptions: demoMessages.length,
+      options: demoMessages,
     })
   }
 
-  onLongPress() {
-    const options = [
-      'Copy Text',
-      'Cancel',
-    ];
-    const cancelButtonIndex = options.length - 1;
-    this.context.actionSheet().showActionSheetWithOptions({
-      options,
-      cancelButtonIndex,
-    },
-    (buttonIndex) => {
-      switch (buttonIndex) {
-        case 0:
-          Clipboard.setString(this.props.currentMessage.text);
-          break;
+  onSend(messages) {
+    newMessage = messages[0].text;
+    if (newMessage < this.state.numOptions && newMessage >= 0) {
+      messages[0].text = this.state.options[messages[0].text];
+      // Get a reference to the database service
+      if (this.state.newConversation) {
+        var newConversation = firebase.database().ref('conversations/').push();
+        var time = new Date();
+        newConversation.set({
+          sender: this.state.uid,
+          recipient: this.state.recipient,
+          messages: messages,
+          time: time.getFullYear() + " " + time.getMonth() + " " + time.getDate() + " " + time.getHours() + " " + time.getMinutes() + " " + time.getSeconds() + " " + time.getMilliseconds(),
+        });
+        var userConversationRef = firebase.database().ref('/users/' + this.state.uid + '/conversations/' + newConversation.key);
+        userConversationRef.set({
+          participant: this.state.recipient,
+        })
+        alert(messages[0].text + " sent to " + this.state.recipient + "! New conversation created with conversationID: " + newConversation.key);
+      } else {
+        alert("conversation already exists, update conversations/{CID}/");
       }
-    });
+
+    } else {
+      alert("invalid message option for current FREE plan, please upgrade to send custom messages. Send a number between 0 - " + (this.state.options.length - 1) + " to send one of the MessageOptions from above.");
+    }
   }
 
   render() {
@@ -61,18 +73,7 @@ class Chat extends React.Component {
       <GiftedChat
         messages={this.state.messages}
         placeholder={this.state.placeholder}
-        onLongPress={this.onLongPress}
-        onSend={(messages) => {
-          // Get a reference to the database service
-          var newConversation = firebase.database().ref('conversations/').push();
-          var time = new Date();
-          newConversation.set({
-            sender: this.state.uid,
-            recipient: this.state.recipient,
-            messages: messages,
-            time: time.getFullYear() + " " + time.getMonth() + " " + time.getDate() + " " + time.getHours() + " " + time.getMinutes() + " " + time.getSeconds() + " " + time.getMilliseconds(),
-          });
-        }}
+        onSend={(messages) => this.onSend(messages)}
         user={{
           _id: 1,
         }}

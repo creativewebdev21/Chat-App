@@ -1,25 +1,38 @@
 import React from 'react';
 
-import * as firebase from 'firebase';
-
 import { GiftedChat } from 'react-native-gifted-chat';
 
 import { Actions } from 'react-native-router-flux';
 
+import * as firebase from 'firebase';
+
 class Conversations extends React.Component {
   state = {
-    conversations: [
-      {
-        _id: 1,
-        text: "test",
-        user: {
-          _id: 2
-        }
-      },
-    ],
+    conversations: [],
     placeholder: "New conversation with...",
-    uid: this.props.uid
+    uid: this.props.uid,
   };
+
+  componentWillMount() {
+    var that = this;
+    return firebase.database().ref('users/' + this.state.uid + '/conversations/').once('value').then(function(snapshot) {
+      let messageList = [];
+      let i = 0;
+      snapshot.forEach((conversationID) => {
+        messageList[i] = {
+          _id: i,
+          text: conversationID.key,
+          user: {
+            _id: 2
+          }
+        };
+        i++;
+      })
+      that.setState({
+        conversations: messageList,
+      });
+    });
+  }
 
   render() {
     return(

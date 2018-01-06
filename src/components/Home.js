@@ -49,7 +49,7 @@ class Home extends React.Component {
         var providerData = user.providerData;
         var time = new Date();
 
-        // Get a reference to the database service
+        // POSTS welcome message to users/{UID}/conversations/welcome
         firebase.database().ref('users/' + uid + '/conversations/welcome/').set({
           username: uid,
           email: email,
@@ -59,8 +59,7 @@ class Home extends React.Component {
           sender: "del-squared",
           time: "textTime"
         });
-        alert ("info posted");
-        // Open Chat Page
+        // Open Conversations Page
         Actions.conversations({
           uid: uid
         });

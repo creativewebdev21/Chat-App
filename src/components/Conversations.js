@@ -11,26 +11,51 @@ class Conversations extends React.Component {
     conversations: [],
     placeholder: "New conversation with...",
     uid: this.props.uid,
+    email: this.props.email,
   };
+
+  constructor(props) {
+    super(props);
+  }
 
   componentWillMount() {
     var that = this;
-    return firebase.database().ref('users/' + this.state.uid + '/conversations/').on('value', function(snapshot) {
+    firebase.database().ref('users/' + this.state.uid + '/conversations/').on('value', function(snapshot) {
       let messageList = [];
       let i = 0;
       snapshot.forEach((conversationID) => {
-        messageList[i] = {
+        messageList.push({
           _id: i,
-          text: conversationID.key,
+          text: conversationID.child("participant").val(),
           user: {
             _id: 2
           }
-        };
+        });
         i++;
       })
+      that.checkEmailMessages(that.state.email);
       that.setState({
         conversations: messageList,
       });
+    });
+  }
+
+  /**
+    Checks for email messages associated with account
+  */
+  checkEmailMessages(email) {
+    let that = this;
+    return firebase.database().ref('users/emails/conversations/').once('value', function(snapshot) {
+      let emailMessageList = [];
+      snapshot.forEach((conversationID) => {
+        if (conversationID.child("email").val().toLowerCase() == email.toLowerCase()) {
+          let userConversationRef = firebase.database().ref('users/' + that.state.uid + '/conversations/' + conversationID.key + '/')
+          userConversationRef.set({
+            participant:  conversationID.child("participant").val()
+          });
+        }
+      })
+      return emailMessageList;
     });
   }
 

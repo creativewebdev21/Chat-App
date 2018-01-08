@@ -12,6 +12,7 @@ class Chat extends React.Component {
     recipient: this.props.recipient,
     uid: this.props.uid,
     newConversation: this.props.newConversation,
+    conversationID: this.props.conversationID,
   };
 
   constructor(props) {
@@ -20,6 +21,9 @@ class Chat extends React.Component {
  }
 
   componentWillMount() {
+    if (!this.state.newConversation) {
+       alert("open existing conversation");
+    }
     demoMessages = ["Thought you should know…", "I could use your service", "Hello"]
     messages = [];
     for (var i = 0; i < 3; i++) {
@@ -55,12 +59,12 @@ class Chat extends React.Component {
         });
         var userConversationRef = firebase.database().ref('/users/' + this.state.uid + '/conversations/' + newConversation.key);
         userConversationRef.set({
-          participant: this.state.recipient,
+          recipient: this.state.recipient,
         })
         var emailConversationRef = firebase.database().ref('/users/emails/conversations/' + newConversation.key);
         emailConversationRef.set({
           email: this.state.recipient,
-          participant: this.state.uid,
+          recipient: this.state.uid,
         })
         alert(messages[0].text + " sent to " + this.state.recipient + "!");
       } else {

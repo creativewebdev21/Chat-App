@@ -57,7 +57,7 @@ class Home extends React.Component {
           message: "welcome to del-squared chat app!",
           displayName: displayName,
           phone: "phone number",
-          participant: "del-squared",
+          recipient: "del-squared",
           time: "textTime"
         });
         // Open Conversations Page
@@ -76,7 +76,7 @@ class Home extends React.Component {
     return(
       <View>
         <Text style={styles.title}>
-          Hello Pat
+          Del-Squared Messaging
         </Text>
         <TextInput
           style={styles.input}

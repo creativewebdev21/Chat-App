@@ -26,10 +26,12 @@ class Conversations extends React.Component {
       snapshot.forEach((conversationID) => {
         messageList.push({
           _id: i,
-          text: conversationID.child("participant").val(),
+          text: i + ": " + conversationID.child("participant").val(),
           user: {
             _id: 2
-          }
+          },
+          conversationID: conversationID.key,
+          participant:conversationID.child("participant").val(),
         });
         i++;
       })
@@ -59,6 +61,25 @@ class Conversations extends React.Component {
     });
   }
 
+  /**
+    Opens existing conversationID Page 3: Chat
+  */
+  openExistingChat(conversationID) {
+    let recipient = "";
+    let that = this;
+    firebase.database().ref('/conversations/' + conversationID).once('value', function(snapshot) {
+      recipient = snapshot.child("recipient").val();
+      //create new conversation
+      Actions.chat({
+        //pass props to chat.js
+        recipient: recipient,
+        uid: that.state.uid,
+        newConversation: false,
+        conversationID: conversationID,
+      });
+    });
+  }
+
   render() {
     return(
       <GiftedChat
@@ -77,7 +98,11 @@ class Conversations extends React.Component {
               newConversation: true,
             });
           } else {
-            alert ("Please enter a valid email address. " + userText + " is not an email address");
+            if (userText >= 0 && userText < this.state.conversations.length) {
+              this.openExistingChat(this.state.conversations[userText].conversationID);
+            } else {
+              alert ("Please enter a valid email address or conversation number. " + userText + " is not a option");
+            }
           }
         }}
         user={{

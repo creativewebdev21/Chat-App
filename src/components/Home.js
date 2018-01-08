@@ -37,6 +37,7 @@ class Home extends React.Component {
   }
 
   componentWillMount() {
+    let that = this;
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         // User is signed in.
@@ -56,12 +57,13 @@ class Home extends React.Component {
           message: "welcome to del-squared chat app!",
           displayName: displayName,
           phone: "phone number",
-          sender: "del-squared",
+          participant: "del-squared",
           time: "textTime"
         });
         // Open Conversations Page
         Actions.conversations({
-          uid: uid
+          uid: uid,
+          email: email,
         });
       } else {
         // User is signed out.
@@ -110,7 +112,8 @@ class Home extends React.Component {
         <TouchableOpacity
           onPress={() => {
             var email = this.state.email;
-            firebase.auth().signInWithEmailAndPassword(email, "password").catch(function(error) {
+            let that = this;
+            firebase.auth().signInWithEmailAndPassword(email, "password").catch(function(error) {// user doesn't exist
               firebase.auth().createUserWithEmailAndPassword(email, "password").catch(function(createError) {
                 // Handle Errors here.
                 var errorCode = createError.code;

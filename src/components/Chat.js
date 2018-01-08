@@ -17,7 +17,6 @@ class Chat extends React.Component {
   constructor(props) {
    super(props);
    this.onSend = this.onSend.bind(this);
-   alert("sender: " + this.state.uid);
  }
 
   componentWillMount() {
@@ -58,7 +57,12 @@ class Chat extends React.Component {
         userConversationRef.set({
           participant: this.state.recipient,
         })
-        alert(messages[0].text + " sent to " + this.state.recipient + "! New conversation created with conversationID: " + newConversation.key);
+        var emailConversationRef = firebase.database().ref('/users/emails/conversations/' + newConversation.key);
+        emailConversationRef.set({
+          email: this.state.recipient,
+          participant: this.state.uid,
+        })
+        alert(messages[0].text + " sent to " + this.state.recipient + "!");
       } else {
         alert("conversation already exists, update conversations/{CID}/");
       }

@@ -30,3 +30,5 @@ react-native run-android
 ```
 react-native run-ios
 ```
+
+#### Author : Ronald
